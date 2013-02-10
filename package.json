@@ -1,0 +1,22 @@
+{
+  "name": "config",
+  "version": "0.0.0",
+  "description": "A configuration manager for node",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon node_modules/mocha/bin/mocha -G",
+    "start": "nodemon index.js"
+  },
+  "repository": "",
+  "author": "Daniel Laxar",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*"
+  }, 
+
+  "dependencies": {
+    "async": ">=0.2.4", 
+    "node.extend": ">=1.0.0"
+  }
+}

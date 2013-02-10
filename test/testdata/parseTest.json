@@ -1,0 +1,13 @@
+{
+	"0": ["1", "2", "3", "4"],
+	"lv0": {
+		"level1": "string", 
+		"level2": ["nested", "array"],
+		"level3": {
+			"getting": "deep",
+			"deeper": {
+				"ok, that's it": true
+			}
+		}
+	}
+}
