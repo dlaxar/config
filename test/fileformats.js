@@ -15,6 +15,9 @@ describe('Fileformats', function () {
 		config().fileformats().should.be.a('array');
 	});
 
-	it('should be able to accept new parsers and fileformats');
+	it('should be able to accept new parsers and fileformats', function() {
+		config().fileformats.add('abc', function() {});
+		expect(config().fileformats()).to.contain('abc');
+	});
 
 });

@@ -1,0 +1,13 @@
+---
+  0: !!seq
+  - 1 
+  - 2
+  - 3
+  - 4
+
+  lv0: !!map
+    level1: string
+    level2: !!seq [nested, array]
+    level3: !!map
+      getting: deep
+      deeper: !!map { "ok, that's it": true }

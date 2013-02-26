@@ -1,4 +1,5 @@
 var extend = require('node.extend');
+var async = require('async');
 
 var backing = {
 
@@ -17,20 +18,33 @@ var backing = {
 	},
 
 	parse: function(extension, file) {
-		if(this.fileformats.formats[extension]) {
-			var result = {};
-			
-			if(!Array.isArray(file)) {
-				file = [file];
+		var guessType = false;
+		
+		if(arguments.length == 1) {
+			guessType = true;
+			file = extension;
+		}
+		
+		if(!Array.isArray(file)) {
+			file = [file];
+		}
+
+		var result = {};
+		var self = this;
+		var path = require('path')
+
+		file.forEach(function(currentFile) {
+			if(guessType) {
+				extension = path.extname(currentFile);
+				if(extension.length >= 1) extension = extension.substring(1);
 			}
 
-			var self = this;
-			file.forEach(function(currentFile) {
+			if(self.fileformats.formats[extension]) {
 				extend(true, result, self.fileformats.formats[extension](currentFile));
-			});
+			}
+		});
 
-			return result;
-		}
+		return result;
 	},
 
 	files: function(ext, cb) {
@@ -79,6 +93,25 @@ var backing = {
 				}
 			});
 		});
+	}, 
+
+	import: function(cb) {
+		var self = this;
+		var c = config;
+		this.files(function(err, files) {
+			if(err) {
+				console.err('failed to load config files');
+				console.err(err);
+				cb(err, null)
+			}
+			else {
+				files.forEach(function(current, index) {
+					var im = self.parse(current);
+					extend(true, c, im);
+				});
+				cb(null, c)
+			}
+		});
 	}
 };
 
@@ -102,11 +135,12 @@ Object.defineProperty(backing, 'fileformats', {
 });
 
 
-var config = function() {
+var config = function(fn) {
+	if(fn) {
+		backing.import(fn);
+	}
 	return 	backing;
 };
-
-module.exports = config;
 
 function addFileFormats(dir) {
 	var async = require('async');
@@ -126,3 +160,5 @@ function addFileFormats(dir) {
 }
 
 addFileFormats('./lib/parser');
+
+module.exports = config;
